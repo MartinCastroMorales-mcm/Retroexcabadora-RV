@@ -76,6 +76,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "MoverBrazoIzquierda",
+                    "type": "Button",
+                    "id": "cf1515af-1f70-4613-9481-4399628f5e98",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MoverBrazoDerecha",
+                    "type": "Button",
+                    "id": "32c1404b-d234-4cf0-a5cc-d59b92c303d7",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -320,6 +338,28 @@
                     "action": "Eye Gaze Is Tracked",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "2475e826-1542-4215-ab72-e2dee8340dbb",
+                    "path": "<XRController>{LeftHand}/primaryButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoverBrazoIzquierda",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "af9230c8-2b48-4380-9d11-0afdf5ed65df",
+                    "path": "<XRController>{LeftHand}/secondaryButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoverBrazoDerecha",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
