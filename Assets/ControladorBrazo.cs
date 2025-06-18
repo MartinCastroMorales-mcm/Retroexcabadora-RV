@@ -4,11 +4,11 @@ using UnityEngine.InputSystem;
 public class ControladorBrazo : MonoBehaviour
 {
     [SerializeField] private float speed = 30f;
-    [SerializeField] private InputActionReference moverBrazoIzquierda; // tecla A o botón izquierdo
-    [SerializeField] private InputActionReference moverBrazoDerecha;   // tecla D o botón derecho
+    [SerializeField] private InputActionReference moverBrazoIzquierda; // usar control izquierdo
+    [SerializeField] private InputActionReference moverBrazoDerecha;   // usar control izquierdo
 
-    [SerializeField] private float minY = 130f;  // Límite mínimo en grados
-    [SerializeField] private float maxY = 170f;  // Límite máximo en grados
+    [SerializeField] private float minY = 130f;  // Limite minimo en grados
+    [SerializeField] private float maxY = 170f;  // Limite maximo en grados
 
     private void OnEnable()
     {
