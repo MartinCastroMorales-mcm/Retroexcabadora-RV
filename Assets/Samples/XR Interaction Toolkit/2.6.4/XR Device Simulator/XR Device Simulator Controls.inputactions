@@ -36,7 +36,7 @@
                     "name": "Toggle Manipulate Left",
                     "type": "Button",
                     "id": "847b79d9-a69b-4484-8688-a4bf40e58163",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -63,7 +63,7 @@
                     "name": "Manipulate Left",
                     "type": "Button",
                     "id": "07c46cc4-c35d-4364-a878-68fad8ab8c64",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -81,7 +81,7 @@
                     "name": "Manipulate Head",
                     "type": "Button",
                     "id": "f5febf74-651b-4f73-8d0a-08b0acdabc4d",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -198,7 +198,7 @@
                     "name": "Toggle Cursor Lock",
                     "type": "Button",
                     "id": "9bd36ab1-f676-4ff4-8a4d-ba0c6fb36268",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -207,7 +207,7 @@
                     "name": "Toggle Primary 2D Axis Target",
                     "type": "Button",
                     "id": "e0fdec2d-309b-4313-aad7-9dcc71f1394d",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -216,7 +216,7 @@
                     "name": "Toggle Secondary 2D Axis Target",
                     "type": "Button",
                     "id": "b3b49ea5-f80f-4d24-a782-d61a13a004b3",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -225,7 +225,7 @@
                     "name": "Toggle Device Position Target",
                     "type": "Button",
                     "id": "15cd3c4a-56b1-4a43-a924-a2118e2adaf4",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -570,6 +570,54 @@
                     "processors": "",
                     "groups": "",
                     "action": "Hand-Controller Mode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Action Map",
+            "id": "169f020c-5408-4dac-92b6-09ba93a819da",
+            "actions": [
+                {
+                    "name": "LeftJoystick",
+                    "type": "Value",
+                    "id": "2414da86-788e-4a8a-9c5a-ffe9884d0fc2",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "TriggerPresionado",
+                    "type": "Button",
+                    "id": "04a0df26-26d9-49df-8c33-419d58d64a6c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "2a89505a-f9cf-4159-9bc7-bb2c2ae79dd0",
+                    "path": "<XRController>{LeftHand}/primary2DAxis ",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftJoystick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8fbb385a-2ef2-4a07-bab4-aab0732779ea",
+                    "path": "<XRController>{LeftHand}/trigger ",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TriggerPresionado",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
