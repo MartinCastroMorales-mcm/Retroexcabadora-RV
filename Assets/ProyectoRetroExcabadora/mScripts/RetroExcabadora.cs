@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -17,13 +17,15 @@ public class RetroExcabadora : MonoBehaviour
     //public CharacterController characterController;
     private bool isInVehicle = false;
     private bool isDoorCubeVisible = false;
-    // Start is called before the first frame update
-    void Start()
-    {
+    public Transform puntoMira;
+    public Transform puntoSalida;
+    public float cooldownTime = 1.0f;
 
-    }
+    private bool isInVehicle = false;
+    private float lastToggleTime = -999f;
 
-    // Update is called once per frame
+    public static bool EnCabina { get; private set; } = false;
+
     void Update()
     {
         InputHandlingForDoor();
@@ -64,14 +66,43 @@ public class RetroExcabadora : MonoBehaviour
     }
 
     void EnterExitVehicle() {
+        if (rightAction.action.ReadValue<float>() == 1 && Time.time - lastToggleTime > cooldownTime)
+        {
+            lastToggleTime = Time.time;
+            EnterExitVehicle();
+        }
+    }
+
+    void EnterExitVehicle()
+    {
         if (isInVehicle)
         {
-            Debug.Log("Exit the vehicle");
+            // Salir de la cabina
+            player.transform.position = puntoSalida.transform.position;
+            EnCabina = false;
+            isInVehicle = false;
         }
         else
         {
             Debug.Log("Enter the vehicle");
             player.transform.position = targetInVehicle.transform.position + new Vector3(0f, -0.5f, 0f);
+            // Entrar a la cabina
+            player.transform.position = targetInVehicle.transform.position + new Vector3(0f, -0.5f, 0f);
+
+            Vector3 direccionObjetivo = puntoMira.forward;
+            direccionObjetivo.y = 0;
+
+            Vector3 direccionCamara = playerCamera.transform.forward;
+            direccionCamara.y = 0;
+
+            Quaternion rotacionActual = Quaternion.LookRotation(direccionCamara);
+            Quaternion rotacionDeseada = Quaternion.LookRotation(direccionObjetivo);
+            Quaternion ajusteRotacion = rotacionDeseada * Quaternion.Inverse(rotacionActual);
+
+            player.transform.rotation = ajusteRotacion * player.transform.rotation;
+
+            EnCabina = true;
+            isInVehicle = true;
         }
     }
 }
