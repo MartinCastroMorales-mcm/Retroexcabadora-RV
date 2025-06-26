@@ -12,8 +12,10 @@ public class Wheel : MonoBehaviour
     private XRGrabInteractable _grabInteractable;
     private Rigidbody rigidbody;
 
-    public void OnGrab(SelectEnterEventArgs args)  
-    {  
+    private bool isYelloBoxVisible = false;
+
+    public void OnGrab(SelectEnterEventArgs args)
+    {
         Debug.Log("Grabbed!");
 
         //if my left hand is ok then do x
@@ -38,6 +40,12 @@ public class Wheel : MonoBehaviour
         this.transform.rotation = Quaternion.Euler(52.492f, 2.007f, preservedZ);
     }
 
+    //Esta funcion cambia a color amarillo cuando se puede interactuar con el objeto
+    void InputHandlingForWheel()
+    {
+        Bounds wheelBounds = new Bounds();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -47,9 +55,7 @@ public class Wheel : MonoBehaviour
         _grabInteractable = GetComponent<XRGrabInteractable>();
         _grabInteractable.selectEntered.AddListener(OnGrab);
         _grabInteractable.selectExited.AddListener(OnDrop);
-
     }
-
     // Update is called once per frame
     void Update()
     {
