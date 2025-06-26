@@ -21,7 +21,6 @@ public class RetroExcabadora : MonoBehaviour
     public Transform puntoSalida;
     public float cooldownTime = 1.0f;
 
-    private bool isInVehicle = false;
     private float lastToggleTime = -999f;
 
     public static bool EnCabina { get; private set; } = false;
@@ -41,8 +40,9 @@ public class RetroExcabadora : MonoBehaviour
             //turn block yellow
             setDoorCubeVisible(true);
             //check if button is pressed
-            if (rightAction.action.ReadValue<float>() == 1)
+            if (rightAction.action.ReadValue<float>() == 1 && Time.time - lastToggleTime > cooldownTime)
             {
+                lastToggleTime = Time.time;
                 this.EnterExitVehicle();
             }
             return;
@@ -51,8 +51,9 @@ public class RetroExcabadora : MonoBehaviour
             //turn block yellow
             setDoorCubeVisible(true);
             //check if button is pressed
-            if (leftAction.action.ReadValue<float>() == 1)
+            if (leftAction.action.ReadValue<float>() == 1 && Time.time - lastToggleTime > cooldownTime)
             {
+                lastToggleTime = Time.time;
                 this.EnterExitVehicle();
             }
             return;
@@ -63,14 +64,6 @@ public class RetroExcabadora : MonoBehaviour
     void setDoorCubeVisible(bool willDoorVisible)
     {
         DoorCube.GetComponent<MeshRenderer>().enabled = willDoorVisible;
-    }
-
-    void EnterExitVehicle() {
-        if (rightAction.action.ReadValue<float>() == 1 && Time.time - lastToggleTime > cooldownTime)
-        {
-            lastToggleTime = Time.time;
-            EnterExitVehicle();
-        }
     }
 
     void EnterExitVehicle()
