@@ -5,12 +5,15 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class Wheel : MonoBehaviour
 {
+    public RetroExcabadora retroExcabadoraScript;
+    public GameObject RetroExcabadoraGM;
     public XRGrabInteractable grabInteractable;
     public Transform AttachPointLeft;
     public Transform AttachPointRight;
     private Vector3 startPos;
     private XRGrabInteractable _grabInteractable;
     private Rigidbody rigidbody;
+    private Vector3 refVector;
 
     private bool isYelloBoxVisible = false;
 
@@ -31,7 +34,7 @@ public class Wheel : MonoBehaviour
     public void OnDrop(SelectExitEventArgs args)  
     {  
         Debug.Log("Dropped!");
-        this.transform.position = startPos;
+        this.transform.localPosition = startPos;
         this.rigidbody.velocity = Vector3.zero;
         this.rigidbody.angularVelocity = Vector3.zero;
         this.rigidbody.isKinematic = true;
@@ -51,16 +54,21 @@ public class Wheel : MonoBehaviour
     {
         Rigidbody rb = GetComponent<Rigidbody>();
         this.rigidbody = rb;
-        startPos = this.transform.position;
+        startPos = this.transform.localPosition;
         _grabInteractable = GetComponent<XRGrabInteractable>();
         _grabInteractable.selectEntered.AddListener(OnGrab);
         _grabInteractable.selectExited.AddListener(OnDrop);
+
+        //Inicializamos retroExcabadora para poder llamar metodos de ese script
+        retroExcabadoraScript = GameObject.
+            FindGameObjectWithTag("RetroExcabadoraTag").GetComponent<RetroExcabadora>();
     }
     // Update is called once per frame
     void Update()
     {
-
+        Transform retroExcabadoraTransform = RetroExcabadoraGM.transform;
+        float angle = Vector3.SignedAngle(this.transform.up, retroExcabadoraTransform.up, retroExcabadoraTransform.forward);
+        //send wheel .
+        retroExcabadoraScript.updateWheelInput(angle);
     }
-
-
 }
