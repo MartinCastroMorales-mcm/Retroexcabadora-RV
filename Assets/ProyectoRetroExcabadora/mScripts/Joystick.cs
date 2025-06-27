@@ -40,7 +40,7 @@ public class Joystick : MonoBehaviour
     {  
         Debug.Log("Dropped!");
         isGrabbing = false;
-        this.transform.position = startPos;
+        this.transform.localPosition = startPos;
         this.rigidbody.velocity = Vector3.zero;
         this.rigidbody.angularVelocity = Vector3.zero;
         this.rigidbody.isKinematic = true;
@@ -54,7 +54,7 @@ public class Joystick : MonoBehaviour
     {
         Rigidbody rb = GetComponent<Rigidbody>();
         this.rigidbody = rb;
-        startPos = this.transform.position;
+        startPos = this.transform.localPosition;
         _grabInteractable = GetComponent<XRGrabInteractable>();
         _grabInteractable.selectEntered.AddListener(OnGrab);
         _grabInteractable.selectExited.AddListener(OnDrop);
