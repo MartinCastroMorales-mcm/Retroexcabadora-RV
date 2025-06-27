@@ -1,68 +1,49 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class BrazoControl : MonoBehaviour
 {
-    public Transform rotadorY; // Rotación en Y
-    public Transform brazo;    // Rotación en Z
-    public Transform palancaVR;
+    public InputActionReference joystickIzquierdoLecturaZ; // Asignar desde el Inspector
+    public InputActionReference joystickIzquierdoLecturaY; // Asignar desde el Inspector
+    public Transform brazoBase;
+    public float velocidadRotacion = 50f;
 
-    public float sensibilidadY = 1f;
-    public float sensibilidadZ = 1f;
-    public float anguloMaxY = 12f, anguloMinY = -12f;
-    public float anguloMaxZ = 30f, anguloMinZ = -10f;
-
-    private bool estaAgarrado = false;
-    private float tiempoInicioAgarrado = 0f;
-    private float tiempoIgnorar = 1f;
-
-    private Quaternion rotacionInicialPalanca;
-    private Quaternion rotacionBaseY;
-    private Quaternion rotacionBaseZ;
-    private bool referenciaAjustada = false;
+    private bool agarrandoPalanca = false;
 
     public void EmpezarAgarrar()
     {
-        estaAgarrado = true;
-        tiempoInicioAgarrado = Time.time;
-        referenciaAjustada = false;
+        agarrandoPalanca = true;
+        joystickIzquierdoLecturaZ.action.Enable();
         Debug.Log("Palanca agarrada");
     }
 
     public void Soltar()
     {
-        estaAgarrado = false;
+        agarrandoPalanca = false;
+        joystickIzquierdoLecturaZ.action.Disable();
         Debug.Log("Palanca soltada");
     }
 
     void Update()
     {
-        if (!estaAgarrado) return;
-        if (Time.time - tiempoInicioAgarrado < tiempoIgnorar) return;
-
-        if (!referenciaAjustada)
-        {
-            rotacionInicialPalanca = palancaVR.localRotation;
-            rotacionBaseY = rotadorY.localRotation;
-            rotacionBaseZ = brazo.localRotation;
-            referenciaAjustada = true;
+        if (!agarrandoPalanca)
             return;
+
+        Vector2 input = joystickIzquierdoLecturaZ.action.ReadValue<Vector2>();
+        Vector2 inputY = joystickIzquierdoLecturaY.action.ReadValue<Vector2>();
+
+        if (Mathf.Abs(input.x) > 0.01f) // Tolerancia para evitar ruido mínimo
+        {
+            // Rotación sobre eje Y (Vector3.up) usando la entrada X del joystick
+            brazoBase.Rotate(0f, 0f, input.x * velocidadRotacion * Time.deltaTime, Space.Self);
         }
 
-        float deltaY = palancaVR.localEulerAngles.y - rotacionInicialPalanca.eulerAngles.y;
-        float deltaZ = palancaVR.localEulerAngles.z - rotacionInicialPalanca.eulerAngles.z;
-
-        if (deltaY > 180f) deltaY -= 360f;
-        if (deltaZ > 180f) deltaZ -= 360f;
-
-        // Directamente clamped sin acumulación
-        float anguloY = Mathf.Clamp(deltaY * sensibilidadY, anguloMinY, anguloMaxY);
-        float anguloZ = Mathf.Clamp(deltaZ * sensibilidadZ, anguloMinZ, anguloMaxZ);
-
-        rotadorY.localRotation = rotacionBaseY * Quaternion.Euler(0, anguloY, 0);
-        brazo.localRotation = rotacionBaseZ * Quaternion.Euler(0, 0, anguloZ);
-
-        Debug.Log($"ΔY: {deltaY:F2}, ΔZ: {deltaZ:F2} | rotY: {anguloY:F2}, rotZ: {anguloZ:F2}");
+        if (Mathf.Abs(inputY.y) > 0.01f) // Tolerancia para evitar ruido mínimo
+        {
+            // Rotación sobre eje Y (Vector3.up) usando la entrada X del joystick
+            brazoBase.Rotate(0f, inputY.y * velocidadRotacion * Time.deltaTime, 0f, Space.Self);
+        }
     }
 }
