@@ -25,18 +25,73 @@ public class RetroExcabadora : MonoBehaviour
 
     public static bool EnCabina { get; private set; } = false;
 
+    public class stateContextContainer
+    {
+        private float speed = 0f;
+        private float acceleration = 1f;
+        public float turnSpeed = 5f;
+        public int wheelAngle = 0;
+        private const float maxTurnSpeed = 30f;
+        private const float tiron = 0f;
+        private const float maxAcceleration = 0f;
+        private const float maxSpeed = 100f;
+        private const float StaticFriction = 1f;
+        private const float kineticFriction = 0f;
+        
+
+        public float getSpeed()
+        {
+            return this.speed;
+        }
+        public float getAcceleration()
+        {
+            return this.acceleration;
+        }
+        public void setSpeed(float speed)
+        {
+            if (speed <= maxSpeed)
+            {
+                this.speed = speed; 
+            }
+        }
+        void increaseAcceleration(float dt)
+        {
+            if (this.acceleration >= maxAcceleration)
+            {
+                //return this.acceleration * dt;
+            }
+
+        }
+        public void setTurnSpeed(float anguloNormalizado)
+        {
+            this.turnSpeed = anguloNormalizado * maxTurnSpeed;
+        }
+    }
+    public stateContextContainer myStateContext;
+    void Start()
+    {
+        myStateContext = new stateContextContainer();
+
+    }
+
     void Update()
     {
         InputHandlingForDoor();
+        moveForward(this.myStateContext.getSpeed());
+        rotateVehicle(1f);
     }
 
     void InputHandlingForDoor()
     {
         //if either hand is in, the block turns yellow and the hand thats inside can "pinch it" to enter
-        Bounds cubeBounds = new Bounds(DoorCube.transform.position, DoorCube.transform.localScale);
+        //Esta linea da error debido a que entrega las coordenadas locales
+        //Bounds cubeBounds = new Bounds(DoorCube.transform.position, DoorCube.transform.localScale);
+        Bounds cubeBounds = DoorCube.GetComponent<Renderer>().bounds;
         Vector3 rightHandPosition = RightHand.transform.position;
         Vector3 leftHandPosition = LeftHand.transform.position;
-        if (cubeBounds.Contains(rightHandPosition)) {
+        if (cubeBounds.Contains(rightHandPosition))
+        {
+            Debug.Log("true look at yellow");
             //turn block yellow
             setDoorCubeVisible(true);
             //check if button is pressed
@@ -47,7 +102,8 @@ public class RetroExcabadora : MonoBehaviour
             }
             return;
         }
-        if (cubeBounds.Contains(leftHandPosition)) {
+        if (cubeBounds.Contains(leftHandPosition))
+        {
             //turn block yellow
             setDoorCubeVisible(true);
             //check if button is pressed
@@ -74,6 +130,7 @@ public class RetroExcabadora : MonoBehaviour
             player.transform.position = puntoSalida.transform.position;
             EnCabina = false;
             isInVehicle = false;
+            player.transform.SetParent(null);
         }
         else
         {
@@ -94,8 +151,59 @@ public class RetroExcabadora : MonoBehaviour
 
             player.transform.rotation = ajusteRotacion * player.transform.rotation;
 
+            player.transform.SetParent(this.transform);
+
             EnCabina = true;
             isInVehicle = true;
+        }
+    }
+
+    public void updatePedalInput(Vector2 input)
+    {
+        Debug.Log("this is public updateInput" + input);
+        if (input.y == 1)
+        {
+            //moveForward(this.myStateContext.getSpeed());
+            this.myStateContext.setSpeed(this.myStateContext.getSpeed() + this.myStateContext.getAcceleration());
+        }
+        if (input.y == -1)
+        {
+            this.myStateContext.setSpeed(this.myStateContext.getSpeed() - this.myStateContext.getAcceleration());
+            //moveBackwards(this.myStateContext.getSpeed());
+        }
+        if (input.y == 0)
+        {
+            this.myStateContext.setSpeed(0f);
+        }
+    }
+    public void updateWheelInput(float angle)
+    {
+        //set Turning Speed
+        Debug.Log("Angulo de manurio" + angle);
+        //maximo a la derecha -90
+        if (angle < -90f)
+        {
+            angle = -90f;
+        }
+        //maximo a la izquierda 90
+        if (angle > 90f)
+        {
+            angle = 90f;
+        }
+        float anguloNormalizado = angle / 90f;
+        this.myStateContext.setTurnSpeed(anguloNormalizado);
+
+    }
+
+    void moveForward(float Speed)
+    {
+        this.transform.Translate(Vector3.right * Speed * Time.deltaTime);
+    }
+    void rotateVehicle(float rotation)
+    {
+        if (this.myStateContext.getSpeed() > 0)
+        {
+            this.transform.Rotate(0, this.myStateContext.turnSpeed * Time.deltaTime, 0);
         }
     }
 }
