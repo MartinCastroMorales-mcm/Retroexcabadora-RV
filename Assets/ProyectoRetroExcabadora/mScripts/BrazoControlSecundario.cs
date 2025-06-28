@@ -21,6 +21,7 @@ public class BrazoControlSecundario : MonoBehaviour
     {
         brazoControlSecundario = true;
         joystickIzquierdoLecturaZ.action.Enable();
+        joystickIzquierdoLecturaY.action.Enable();
         TurnProvider.enabled = false; // Desactiva el volteo
     }
 
@@ -28,6 +29,7 @@ public class BrazoControlSecundario : MonoBehaviour
     {
         brazoControlSecundario = false;
         joystickIzquierdoLecturaZ.action.Disable();
+        joystickIzquierdoLecturaY.action.Disable();
         TurnProvider.enabled = true; // Activa el volteo
     }
 
@@ -39,16 +41,30 @@ public class BrazoControlSecundario : MonoBehaviour
         Vector2 input = joystickIzquierdoLecturaZ.action.ReadValue<Vector2>();
         Vector2 inputY = joystickIzquierdoLecturaY.action.ReadValue<Vector2>();
 
-        if (Mathf.Abs(input.x) > 0.01f) // Tolerancia para evitar ruido mínimo
+        // --- Control para la pala (rotación en eje Y usando input.x) ---
+        if (Mathf.Abs(input.x) > 0.01f)
         {
-            // Rotación sobre eje Y (Vector3.up) usando la entrada X del joystick
-            pala.Rotate(0f, input.x * velocidadRotacion * Time.deltaTime, 0f, Space.Self);
+            Vector3 rotacionActual = pala.localEulerAngles;
+            float rotY = rotacionActual.y;
+            if (rotY > 180f) rotY -= 360f;
+
+            rotY += input.x * velocidadRotacion * Time.deltaTime;
+            rotY = Mathf.Clamp(rotY, -40f, 60f); // Ajusta los límites según tu diseño
+
+            pala.localRotation = Quaternion.Euler(0f, rotY, 0f);
         }
 
-        if (Mathf.Abs(inputY.y) > 0.01f) // Tolerancia para evitar ruido mínimo
+        // --- Control para el brazo secundario (rotación en eje Z usando inputY.y) ---
+        if (Mathf.Abs(inputY.y) > 0.01f)
         {
-            // Rotación sobre eje Y (Vector3.up) usando la entrada X del joystick
-            brazoSegundo.Rotate(0f, inputY.y * velocidadRotacion * Time.deltaTime, 0f, Space.Self);
+            Vector3 rotacionActual = brazoSegundo.localEulerAngles;
+            float rotZ = rotacionActual.z;
+            if (rotZ > 180f) rotZ -= 360f;
+
+            rotZ += inputY.y * velocidadRotacion * Time.deltaTime;
+            rotZ = Mathf.Clamp(rotZ, -10f, 40f); // Ajusta los límites si es necesario
+
+            brazoSegundo.localRotation = Quaternion.Euler(0f, 0f, rotZ);
         }
     }
 }
