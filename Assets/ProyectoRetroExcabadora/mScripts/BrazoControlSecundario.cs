@@ -1,57 +1,70 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class BrazoControlSecundario : MonoBehaviour
 {
-    public Transform brazo;         // El objeto que rota en Y (segundo brazo)
-    public Transform palancaVR;     // Joystick derecho
+    public InputActionReference joystickIzquierdoLecturaZ; // Asignar desde el Inspector
+    public InputActionReference joystickIzquierdoLecturaY; // Asignar desde el Inspector
+    public Transform brazoSegundo;
+    public Transform pala;
+    public ActionBasedContinuousTurnProvider TurnProvider;
 
-    public float sensibilidadY = 1f;
-    public float anguloMaxY = 30f, anguloMinY = -75f;
 
-    private bool estaAgarrado = false;
-    private float tiempoInicioAgarrado = 0f;
-    private float tiempoIgnorar = 0.5f;
+    public float velocidadRotacion = 50f;
 
-    private Quaternion rotacionInicialPalanca;
-    private Quaternion rotacionBase;
-    private bool referenciaAjustada = false;
+    private bool brazoControlSecundario = false;
 
     public void EmpezarAgarrar()
     {
-        estaAgarrado = true;
-        tiempoInicioAgarrado = Time.time;
-        referenciaAjustada = false;
-        Debug.Log("Joystick derecho agarrado");
+        brazoControlSecundario = true;
+        joystickIzquierdoLecturaZ.action.Enable();
+        joystickIzquierdoLecturaY.action.Enable();
+        TurnProvider.enabled = false; // Desactiva el volteo
     }
 
     public void Soltar()
     {
-        estaAgarrado = false;
-        Debug.Log("Joystick derecho soltado");
+        brazoControlSecundario = false;
+        joystickIzquierdoLecturaZ.action.Disable();
+        joystickIzquierdoLecturaY.action.Disable();
+        TurnProvider.enabled = true; // Activa el volteo
     }
 
     void Update()
     {
-        if (!estaAgarrado) return;
-        if (Time.time - tiempoInicioAgarrado < tiempoIgnorar) return;
-
-        if (!referenciaAjustada)
-        {
-            rotacionInicialPalanca = palancaVR.localRotation;
-            rotacionBase = brazo.localRotation;
-            referenciaAjustada = true;
+        if (!brazoControlSecundario)
             return;
+
+        Vector2 input = joystickIzquierdoLecturaZ.action.ReadValue<Vector2>();
+        Vector2 inputY = joystickIzquierdoLecturaY.action.ReadValue<Vector2>();
+
+        // --- Control para la pala (rotación en eje Y usando input.x) ---
+        if (Mathf.Abs(input.x) > 0.01f)
+        {
+            Vector3 rotacionActual = pala.localEulerAngles;
+            float rotY = rotacionActual.y;
+            if (rotY > 180f) rotY -= 360f;
+
+            rotY += input.x * velocidadRotacion * Time.deltaTime;
+            rotY = Mathf.Clamp(rotY, -40f, 60f); // Ajusta los límites según tu diseño
+
+            pala.localRotation = Quaternion.Euler(0f, rotY, 0f);
         }
 
-        float deltaY = palancaVR.localEulerAngles.y - rotacionInicialPalanca.eulerAngles.y;
-        if (deltaY > 180f) deltaY -= 360f;
+        // --- Control para el brazo secundario (rotación en eje Z usando inputY.y) ---
+        if (Mathf.Abs(inputY.y) > 0.01f)
+        {
+            Vector3 rotacionActual = brazoSegundo.localEulerAngles;
+            float rotZ = rotacionActual.z;
+            if (rotZ > 180f) rotZ -= 360f;
 
-        float anguloY = Mathf.Clamp(deltaY * sensibilidadY, anguloMinY, anguloMaxY);
+            rotZ += inputY.y * velocidadRotacion * Time.deltaTime;
+            rotZ = Mathf.Clamp(rotZ, -10f, 40f); // Ajusta los límites si es necesario
 
-        brazo.localRotation = rotacionBase * Quaternion.Euler(0, anguloY, 0);
-
-        Debug.Log($"ΔY: {deltaY:F2} | rotY: {anguloY:F2}");
+            brazoSegundo.localRotation = Quaternion.Euler(0f, 0f, rotZ);
+        }
     }
 }
