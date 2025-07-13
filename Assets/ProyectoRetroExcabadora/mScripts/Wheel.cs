@@ -43,11 +43,11 @@ public class Wheel : MonoBehaviour
         this.transform.rotation = Quaternion.Euler(52.492f, 2.007f, preservedZ);
     }
 
-    //Esta funcion cambia a color amarillo cuando se puede interactuar con el objeto
-    void InputHandlingForWheel()
-    {
-        Bounds wheelBounds = new Bounds();
-    }
+    ////Esta funcion cambia a color amarillo cuando se puede interactuar con el objeto
+    //void InputHandlingForWheel()
+    //{
+        //Bounds wheelBounds = new Bounds();
+    //}
 
     // Start is called before the first frame update
     void Start()
@@ -67,8 +67,23 @@ public class Wheel : MonoBehaviour
     void Update()
     {
         Transform retroExcabadoraTransform = RetroExcabadoraGM.transform;
-        float angle = Vector3.SignedAngle(this.transform.up, retroExcabadoraTransform.up, retroExcabadoraTransform.forward);
+        float angle = Vector3.SignedAngle(
+            this.transform.up, retroExcabadoraTransform.up, retroExcabadoraTransform.right);
+        //float anguloNormalizado = Mathf.Clamp(angle, -1f, 1f); // Force to [-1, 1]
+        float anguloNormalizado = angle/180f;
+        //float angle = this.transform.localEulerAngles.z;    
+        //Quaternion currentRotation = transform.localRotation;
+        //// Access individual components (x, y, z, w)
+        //Debug.Log($"Quaternion: {currentRotation}");
+        //Debug.Log("localEulerAngles.z update wheel angle: " + angle);
+        Debug.Log("update wheel angle: " + angle);
+        Debug.Log("update wheel angleNormalizado: " + anguloNormalizado);
+        Debug.Assert(anguloNormalizado <= 1f);
+        Debug.Assert(anguloNormalizado >= -1f);
+        //Debug.Log("update wheel angle: " + angle);
+    
         //send wheel .
-        retroExcabadoraScript.updateWheelInput(angle);
+        retroExcabadoraScript.updateWheelInput(anguloNormalizado);
     }
+
 }

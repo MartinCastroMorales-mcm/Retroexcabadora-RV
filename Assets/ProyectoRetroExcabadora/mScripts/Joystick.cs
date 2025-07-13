@@ -23,7 +23,7 @@ public class Joystick : MonoBehaviour
 
     public void OnGrab(SelectEnterEventArgs args)
     {
-        Debug.Log("Grabbed!");
+        //Debug.Log("Grabbed!");
         isGrabbing = true;
 
         //if my left hand is ok then do x
@@ -38,7 +38,7 @@ public class Joystick : MonoBehaviour
     }  
     public void OnDrop(SelectExitEventArgs args)  
     {  
-        Debug.Log("Dropped!");
+        //Debug.Log("Dropped!");
         isGrabbing = false;
         this.transform.localPosition = startPos;
         this.rigidbody.velocity = Vector3.zero;
@@ -74,12 +74,12 @@ public class Joystick : MonoBehaviour
             //vector3.right es el vector unitario de x
             if (tiltedX > 0.7f)
             { //cos(45) = 0.70711
-                Debug.Log("Tilted to the right");
+                //Debug.Log("Tilted to the right");
                 moverPalaArriba();
             }
             else if (tiltedX < -0.7f)
             { //cos(45) = 0.70711
-                Debug.Log("Tilted to the left");
+                //Debug.Log("Tilted to the left");
                 moverPalaAbajo();
             }
             else
@@ -89,11 +89,11 @@ public class Joystick : MonoBehaviour
             if (tiltedZ > 0.7f)
             { //cos(45) = 0.70711
                 moverForkHaciaArriba();
-                Debug.Log("Tilted to the forwards");
+                //Debug.Log("Tilted to the forwards");
             }
             else if (tiltedZ < -0.7f)
             { //cos(45) = 0.70711
-                Debug.Log("Tilted to the backwards");
+                //Debug.Log("Tilted to the backwards");
                 moverForkHaciaAbajo();
             }
         }
@@ -129,7 +129,7 @@ public class Joystick : MonoBehaviour
         }
         else
         {
-            Debug.Log("Angulo de pala2: " + angle);
+            //Debug.Log("Angulo de pala2: " + angle);
 
         }
     }
@@ -141,12 +141,12 @@ public class Joystick : MonoBehaviour
         float forkTiltedZ = Vector3.Dot(forkTransform.right,  retroexcabadoraTransform.right);
         if (forkTiltedZ > 0.64)
         { //cos(50) ~ 0.64
-            Debug.Log("fork can move now: " + forkTiltedZ);
+            //Debug.Log("fork can move now: " + forkTiltedZ);
             forkTransform.Rotate(0, -turnSpeed * Time.deltaTime, 0);
         }
         else
         {
-            Debug.Log("fork should not move now: " + forkTiltedZ);
+            //Debug.Log("fork should not move now: " + forkTiltedZ);
         }
     }
     void moverForkHaciaAbajo()
@@ -191,7 +191,7 @@ public class Joystick : MonoBehaviour
         if (joystickTransform.localEulerAngles.z >= 40 && joystickTransform.localEulerAngles.z <= 150)
         {
             isJoystickBackwards = true;
-            Debug.Log("is backwards: " + joystickTransform.localEulerAngles.z);
+            //Debug.Log("is backwards: " + joystickTransform.localEulerAngles.z);
         }
         else
         {
@@ -219,7 +219,7 @@ public class Joystick : MonoBehaviour
     }
     float NormalizeAngle(float angle)
     {
-        Debug.Log(angle);
+        //Debug.Log(angle);
         angle %= 360f;
         if (angle < 0f)
             angle += 360f;

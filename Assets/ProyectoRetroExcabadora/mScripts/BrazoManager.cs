@@ -27,13 +27,13 @@ public class BrazoControl : MonoBehaviour
         estaAgarrado = true;
         tiempoInicioAgarrado = Time.time;
         referenciaAjustada = false;
-        Debug.Log("Palanca agarrada");
+        //Debug.Log("Palanca agarrada");
     }
 
     public void Soltar()
     {
         estaAgarrado = false;
-        Debug.Log("Palanca soltada");
+        //Debug.Log("Palanca soltada");
     }
 
     void Update()
@@ -63,6 +63,6 @@ public class BrazoControl : MonoBehaviour
         rotadorY.localRotation = rotacionBaseY * Quaternion.Euler(0, anguloY, 0);
         brazo.localRotation = rotacionBaseZ * Quaternion.Euler(0, 0, anguloZ);
 
-        Debug.Log($"ΔY: {deltaY:F2}, ΔZ: {deltaZ:F2} | rotY: {anguloY:F2}, rotZ: {anguloZ:F2}");
+        //Debug.Log($"ΔY: {deltaY:F2}, ΔZ: {deltaZ:F2} | rotY: {anguloY:F2}, rotZ: {anguloZ:F2}");
     }
 }

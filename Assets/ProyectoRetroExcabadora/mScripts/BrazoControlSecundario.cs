@@ -23,13 +23,13 @@ public class BrazoControlSecundario : MonoBehaviour
         estaAgarrado = true;
         tiempoInicioAgarrado = Time.time;
         referenciaAjustada = false;
-        Debug.Log("Joystick derecho agarrado");
+        //Debug.Log("Joystick derecho agarrado");
     }
 
     public void Soltar()
     {
         estaAgarrado = false;
-        Debug.Log("Joystick derecho soltado");
+        //Debug.Log("Joystick derecho soltado");
     }
 
     void Update()
@@ -52,6 +52,6 @@ public class BrazoControlSecundario : MonoBehaviour
 
         brazo.localRotation = rotacionBase * Quaternion.Euler(0, anguloY, 0);
 
-        Debug.Log($"ΔY: {deltaY:F2} | rotY: {anguloY:F2}");
+        //Debug.Log($"ΔY: {deltaY:F2} | rotY: {anguloY:F2}");
     }
 }
