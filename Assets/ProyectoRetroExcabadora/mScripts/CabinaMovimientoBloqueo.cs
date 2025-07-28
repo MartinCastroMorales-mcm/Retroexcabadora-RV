@@ -9,6 +9,8 @@ public class CabinaMovimientoBloqueo : MonoBehaviour
 
     public ActionBasedContinuousMoveProvider moveProvider;
 
+    private bool bloqueado = false;
+
     void Start()
     {
         retroExcabadoraScript = GameObject.
@@ -16,8 +18,10 @@ public class CabinaMovimientoBloqueo : MonoBehaviour
     }
     void Update()
     {
-        if (RetroExcabadora.EnCabina)
+        if (RetroExcabadora.EnCabina && !bloqueado)
         {
+            moveProvider.enabled = false; // 🔒 Desactiva el movimiento continuo
+            bloqueado = true;
             {
                 Vector2 originalInputAxis = moveProvider.leftHandMoveAction.action.ReadValue<Vector2>();
                 UsarInput(originalInputAxis);
@@ -32,11 +36,11 @@ public class CabinaMovimientoBloqueo : MonoBehaviour
             Martín: Por alguna razon esta linea funciona mientras que con Disable()
             el original input era siempre (0,0)
             */
-            moveProvider.enabled = false;
         }
-        else
+        else if (!RetroExcabadora.EnCabina && bloqueado)
         {
-            moveProvider.enabled = true;
+            moveProvider.enabled = true;  // 🔓 Activa nuevamente al salir
+            bloqueado = false;
         }
     }
     void UsarInput(Vector2 input)

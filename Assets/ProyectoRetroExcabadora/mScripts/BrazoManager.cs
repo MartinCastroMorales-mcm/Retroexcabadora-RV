@@ -1,68 +1,80 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class BrazoControl : MonoBehaviour
 {
-    public Transform rotadorY; // Rotación en Y
-    public Transform brazo;    // Rotación en Z
-    public Transform palancaVR;
+    public InputActionReference joystickIzquierdoLecturaZ; // Asignar desde el Inspector
+    public InputActionReference joystickIzquierdoLecturaY; // Asignar desde el Inspector
+    public Transform brazoBase;
+    public Transform brazoSegundo;
+    public float velocidadRotacion = 50f;
 
-    public float sensibilidadY = 1f;
-    public float sensibilidadZ = 1f;
-    public float anguloMaxY = 12f, anguloMinY = -12f;
-    public float anguloMaxZ = 30f, anguloMinZ = -10f;
-
-    private bool estaAgarrado = false;
-    private float tiempoInicioAgarrado = 0f;
-    private float tiempoIgnorar = 1f;
-
-    private Quaternion rotacionInicialPalanca;
-    private Quaternion rotacionBaseY;
-    private Quaternion rotacionBaseZ;
-    private bool referenciaAjustada = false;
+    private bool agarrandoPalanca = false;
 
     public void EmpezarAgarrar()
     {
-        estaAgarrado = true;
-        tiempoInicioAgarrado = Time.time;
-        referenciaAjustada = false;
+        agarrandoPalanca = true;
+        joystickIzquierdoLecturaZ.action.Enable();
+        joystickIzquierdoLecturaY.action.Enable();
         Debug.Log("Palanca agarrada");
     }
 
     public void Soltar()
     {
-        estaAgarrado = false;
+        agarrandoPalanca = false;
+        joystickIzquierdoLecturaZ.action.Disable();
+        joystickIzquierdoLecturaY.action.Disable();
         Debug.Log("Palanca soltada");
     }
 
-    void Update()
+void Update()
+{
+    if (!agarrandoPalanca)
+        return;
+
+    Vector2 input = joystickIzquierdoLecturaZ.action.ReadValue<Vector2>();
+    Vector2 inputY = joystickIzquierdoLecturaY.action.ReadValue<Vector2>();
+
+    if (Mathf.Abs(input.x) > 0.01f)
     {
-        if (!estaAgarrado) return;
-        if (Time.time - tiempoInicioAgarrado < tiempoIgnorar) return;
+        // Obtener la rotación actual en el espacio local
+        Vector3 rotacionActualX = brazoBase.localEulerAngles;
 
-        if (!referenciaAjustada)
-        {
-            rotacionInicialPalanca = palancaVR.localRotation;
-            rotacionBaseY = rotadorY.localRotation;
-            rotacionBaseZ = brazo.localRotation;
-            referenciaAjustada = true;
-            return;
-        }
+        // Convertimos a un rango [-180, 180] para evitar errores de overflow
+        float rotY = rotacionActualX.y;
+        if (rotY > 180f) rotY -= 360f;
 
-        float deltaY = palancaVR.localEulerAngles.y - rotacionInicialPalanca.eulerAngles.y;
-        float deltaZ = palancaVR.localEulerAngles.z - rotacionInicialPalanca.eulerAngles.z;
+        // Aplicar la rotación basada en el input
+        rotY += input.x * velocidadRotacion * Time.deltaTime;
 
-        if (deltaY > 180f) deltaY -= 360f;
-        if (deltaZ > 180f) deltaZ -= 360f;
+        // Limitar la rotación entre -45 y 45 grados (ajústalo a lo que necesites)
+        rotY = Mathf.Clamp(rotY, -11f, 11f);
 
-        // Directamente clamped sin acumulación
-        float anguloY = Mathf.Clamp(deltaY * sensibilidadY, anguloMinY, anguloMaxY);
-        float anguloZ = Mathf.Clamp(deltaZ * sensibilidadZ, anguloMinZ, anguloMaxZ);
+        // Aplicamos la rotación de vuelta
+        brazoBase.localRotation = Quaternion.Euler(0f, rotY, 0f);
+    }
 
-        rotadorY.localRotation = rotacionBaseY * Quaternion.Euler(0, anguloY, 0);
-        brazo.localRotation = rotacionBaseZ * Quaternion.Euler(0, 0, anguloZ);
+    if (Mathf.Abs(inputY.y) > 0.01f) // Tolerancia para evitar ruido mínimo
+     {
+            // Obtener la rotación actual en el espacio local
+            Vector3 rotacionActualY = brazoSegundo.localEulerAngles;
 
-        Debug.Log($"ΔY: {deltaY:F2}, ΔZ: {deltaZ:F2} | rotY: {anguloY:F2}, rotZ: {anguloZ:F2}");
+            // Convertimos a un rango [-180, 180] para evitar errores de overflow
+            float rotZ = rotacionActualY.y;
+            if (rotZ > 180f) rotZ -= 360f;
+
+            // Aplicar la rotación basada en el input
+            rotZ += input.x * velocidadRotacion * Time.deltaTime;
+
+            // Limitar la rotación entre -60 y 45 grados
+            rotZ = Mathf.Clamp(rotZ, -60f, 45f);
+
+            // Aplicamos la rotación de vuelta
+            brazoSegundo.localRotation = Quaternion.Euler(0f, rotZ, 0f);
+            // Rotación sobre eje Y (Vector3.up) usando la entrada X del joystick
+            brazoSegundo.Rotate(0f, inputY.y * velocidadRotacion * Time.deltaTime, 0f, Space.Self);
+     }
     }
 }
