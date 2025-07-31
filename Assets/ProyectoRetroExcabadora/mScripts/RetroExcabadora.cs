@@ -20,6 +20,9 @@ public class RetroExcabadora : MonoBehaviour
     public Transform puntoMira;
     public Transform puntoSalida;
     public float cooldownTime = 1.0f;
+    float turnSpeed = 0f;
+    float maxTurnSpeed = 30f;
+
 
     private float lastToggleTime = -999f;
 
@@ -29,7 +32,7 @@ public class RetroExcabadora : MonoBehaviour
     {
         private float speed = 0f;
         private float acceleration = 1f;
-        public float turnSpeed = 5f;
+        public float turnSpeed = 0f;
         public int wheelAngle = 0;
         private const float maxTurnSpeed = 30f;
         private const float tiron = 0f;
@@ -65,6 +68,7 @@ public class RetroExcabadora : MonoBehaviour
         public void setTurnSpeed(float anguloNormalizado)
         {
             this.turnSpeed = anguloNormalizado * maxTurnSpeed;
+            Debug.Log("setTurnSpeed: " + anguloNormalizado + " maxTurnSpeed: " + maxTurnSpeed + "this.turnSpeed: " + this.turnSpeed);
         }
     }
     public stateContextContainer myStateContext;
@@ -160,7 +164,7 @@ public class RetroExcabadora : MonoBehaviour
 
     public void updatePedalInput(Vector2 input)
     {
-        Debug.Log("this is public updateInput" + input);
+        //Debug.Log("this is public updateInput" + input);
         if (input.y == 1)
         {
             //moveForward(this.myStateContext.getSpeed());
@@ -178,21 +182,12 @@ public class RetroExcabadora : MonoBehaviour
     }
     public void updateWheelInput(float angle)
     {
-        //set Turning Speed
-        Debug.Log("Angulo de manurio" + angle);
-        //maximo a la derecha -90
-        if (angle < -90f)
-        {
-            angle = -90f;
+        Debug.Log("angle in updateWheelInput:" + angle);
+        if(angle > -0.15f && angle < 0.15f) {
+            this.turnSpeed = 0;
+        }else {
+            this.turnSpeed = angle * maxTurnSpeed;
         }
-        //maximo a la izquierda 90
-        if (angle > 90f)
-        {
-            angle = 90f;
-        }
-        float anguloNormalizado = angle / 90f;
-        this.myStateContext.setTurnSpeed(anguloNormalizado);
-
     }
 
     void moveForward(float Speed)
@@ -203,7 +198,8 @@ public class RetroExcabadora : MonoBehaviour
     {
         if (this.myStateContext.getSpeed() > 0)
         {
-            this.transform.Rotate(0, this.myStateContext.turnSpeed * Time.deltaTime, 0);
+            //Debug.Log(this.myStateContext);
+            this.transform.Rotate(0, turnSpeed * Time.deltaTime, 0);
         }
     }
 }
