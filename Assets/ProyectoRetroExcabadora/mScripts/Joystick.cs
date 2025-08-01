@@ -9,7 +9,15 @@ public class Joystick : MonoBehaviour
     public float maxAngleForFork = 30;
     public float minAngleForFork = 70;
     private float maxAngleForPala = 30f;
-    private float minAngleForPala = 70f;
+    private static float minAngleForPala = 70f;
+    public static float MinAngleForPala
+    {
+        get { return minAngleForPala; }
+        set { minAngleForPala = value; }
+    }
+
+
+
     public GameObject Pala;
     public GameObject ForkForPala;
     public GameObject joystickGameObject;

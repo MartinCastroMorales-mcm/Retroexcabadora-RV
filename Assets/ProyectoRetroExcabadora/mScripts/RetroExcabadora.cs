@@ -5,12 +5,14 @@ using UnityEngine.InputSystem;
 
 public class RetroExcabadora : MonoBehaviour
 {
+    public PalaController palaController;
     public InputActionProperty rightAction;
     public InputActionProperty leftAction;
     public GameObject player;
     public GameObject targetInVehicle;
     public GameObject playerCamera;
     public GameObject DoorCube;
+    public GameObject Pala; //continuar aqui.
 
     public GameObject LeftHand;
     public GameObject RightHand;
@@ -34,7 +36,7 @@ public class RetroExcabadora : MonoBehaviour
         private float acceleration = 1f;
         public float turnSpeed = 0f;
         public int wheelAngle = 0;
-        private const float maxTurnSpeed = 30f;
+        private const float maxTurnSpeed = 100f;
         private const float tiron = 0f;
         private const float maxAcceleration = 0f;
         private const float maxSpeed = 100f;
@@ -72,18 +74,37 @@ public class RetroExcabadora : MonoBehaviour
         }
     }
     public stateContextContainer myStateContext;
+    
     void Start()
     {
         myStateContext = new stateContextContainer();
+        palaController = FindObjectOfType<PalaController>();
 
     }
 
     void Update()
     {
         InputHandlingForDoor();
+        Debug.Log(this.myStateContext.getSpeed());
         moveForward(this.myStateContext.getSpeed());
         rotateVehicle(1f);
+        checkIfDropPala();
     }
+    
+
+    void checkIfDropPala() {
+        int anguloImportante = 0;
+        Transform retroexcabadoraTransform = transform;
+        Transform palaTransform = Pala.transform;
+
+        float angle = Vector3.Angle(palaTransform.right, retroexcabadoraTransform.up);
+        if(angle > (Joystick.MinAngleForPala - 10f)) {
+            Debug.Log("angulo para soltar debris");
+            palaController.ReleaseDebris();
+        }
+    }
+    
+
 
     void InputHandlingForDoor()
     {
@@ -183,11 +204,13 @@ public class RetroExcabadora : MonoBehaviour
     public void updateWheelInput(float angle)
     {
         Debug.Log("angle in updateWheelInput:" + angle);
-        if(angle > -0.15f && angle < 0.15f) {
+        if(angle > -0.35f && angle < 0.35f) {
+            Debug.Log("the turn speed is 0");
             this.turnSpeed = 0;
         }else {
             this.turnSpeed = angle * maxTurnSpeed;
         }
+        Debug.Log("turnSpeed: " + this.turnSpeed);
     }
 
     void moveForward(float Speed)
@@ -200,6 +223,8 @@ public class RetroExcabadora : MonoBehaviour
         {
             //Debug.Log(this.myStateContext);
             this.transform.Rotate(0, turnSpeed * Time.deltaTime, 0);
+        }else if(this.myStateContext.getSpeed() < 0) {
+            this.transform.Rotate(0, -turnSpeed * Time.deltaTime, 0);
         }
     }
 }
