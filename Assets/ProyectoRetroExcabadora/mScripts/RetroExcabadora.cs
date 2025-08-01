@@ -5,12 +5,14 @@ using UnityEngine.InputSystem;
 
 public class RetroExcabadora : MonoBehaviour
 {
+    public PalaController palaController;
     public InputActionProperty rightAction;
     public InputActionProperty leftAction;
     public GameObject player;
     public GameObject targetInVehicle;
     public GameObject playerCamera;
     public GameObject DoorCube;
+    public GameObject Pala; //continuar aqui.
 
     public GameObject LeftHand;
     public GameObject RightHand;
@@ -72,18 +74,37 @@ public class RetroExcabadora : MonoBehaviour
         }
     }
     public stateContextContainer myStateContext;
+    
     void Start()
     {
         myStateContext = new stateContextContainer();
+        palaController = FindObjectOfType<PalaController>();
 
     }
 
     void Update()
     {
         InputHandlingForDoor();
+        Debug.Log(this.myStateContext.getSpeed());
         moveForward(this.myStateContext.getSpeed());
         rotateVehicle(1f);
+        checkIfDropPala();
     }
+    
+
+    void checkIfDropPala() {
+        int anguloImportante = 0;
+        Transform retroexcabadoraTransform = transform;
+        Transform palaTransform = Pala.transform;
+
+        float angle = Vector3.Angle(palaTransform.right, retroexcabadoraTransform.up);
+        if(angle > (Joystick.MinAngleForPala - 10f)) {
+            Debug.Log("angulo para soltar debris");
+            palaController.ReleaseDebris();
+        }
+    }
+    
+
 
     void InputHandlingForDoor()
     {
@@ -164,7 +185,7 @@ public class RetroExcabadora : MonoBehaviour
 
     public void updatePedalInput(Vector2 input)
     {
-        //Debug.Log("this is public updateInput" + input);
+        Debug.Log("this is public updateInput" + input);
         if (input.y == 1)
         {
             //moveForward(this.myStateContext.getSpeed());

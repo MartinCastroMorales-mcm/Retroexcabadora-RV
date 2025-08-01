@@ -357,7 +357,6 @@ GameObject:
   m_Component:
   - component: {fileID: 106826281}
   - component: {fileID: 106826282}
-  - component: {fileID: 106826283}
   m_Layer: 0
   m_Name: Silla Manager
   m_TagString: Untagged
@@ -394,19 +393,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xrRig: {fileID: 514652759}
---- !u!114 &106826283
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 106826280}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5eb0411a4cdca78489916cd13b38aadc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  debrisPosInPala: {fileID: 0}
 --- !u!1 &169538097
 GameObject:
   m_ObjectHideFlags: 0
@@ -3836,6 +3822,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debrisPosInPala: {fileID: 1120298674}
+  Debris: {fileID: 0}
 --- !u!1 &1136038751
 GameObject:
   m_ObjectHideFlags: 0
@@ -4984,6 +4971,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e327dc9d97baa5428092af8c6fa5ad5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  palaController: {fileID: 0}
   rightAction:
     m_UseReference: 1
     m_Action:
@@ -5014,6 +5002,7 @@ MonoBehaviour:
   targetInVehicle: {fileID: 567997469}
   playerCamera: {fileID: 1855170608}
   DoorCube: {fileID: 2072991160}
+  Pala: {fileID: 1120675298}
   LeftHand: {fileID: 229080783}
   RightHand: {fileID: 1577902609}
   puntoMira: {fileID: 1198792150}
@@ -7313,8 +7302,8 @@ Transform:
   m_GameObject: {fileID: 2072991160}
   serializedVersion: 2
   m_LocalRotation: {x: 0.0019891777, y: -0.7018741, z: -0.0031813707, w: -0.7122911}
-  m_LocalPosition: {x: 0.011040092, y: -0.012556406, z: 0.022614015}
-  m_LocalScale: {x: 0.017298782, y: 0.029612452, z: 0.020855451}
+  m_LocalPosition: {x: 0.011, y: -0.0006, z: 0.0226}
+  m_LocalScale: {x: 0.017298782, y: 0.044371296, z: 0.020855451}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1561328253}
@@ -8063,7 +8052,7 @@ PrefabInstance:
     - target: {fileID: 6598815579406187037, guid: 18ddb545287c546e19cc77dc9fbb2189,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8083,6 +8072,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rubble
       objectReference: {fileID: 0}
+    - target: {fileID: 3060759834426620273, guid: 2349c564c317b46459b21f98bf22c13b,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.489
+      objectReference: {fileID: 0}
     - target: {fileID: 6590940088805166470, guid: 2349c564c317b46459b21f98bf22c13b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -8091,7 +8085,7 @@ PrefabInstance:
     - target: {fileID: 6590940088805166470, guid: 2349c564c317b46459b21f98bf22c13b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.12
+      value: 2.41
       objectReference: {fileID: 0}
     - target: {fileID: 6590940088805166470, guid: 2349c564c317b46459b21f98bf22c13b,
         type: 3}
@@ -8168,4 +8162,3 @@ SceneRoots:
   - {fileID: 285338905}
   - {fileID: 1561328252}
   - {fileID: 6209319154435123032}
-
