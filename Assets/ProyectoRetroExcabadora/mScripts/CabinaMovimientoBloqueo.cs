@@ -18,9 +18,10 @@ public class CabinaMovimientoBloqueo : MonoBehaviour
     }
     void Update()
     {
-        if (RetroExcabadora.EnCabina && !bloqueado)
+        if (RetroExcabadora.EnCabina) //&& !bloqueado)
         {
             moveProvider.enabled = false; // 🔒 Desactiva el movimiento continuo
+            //Es imposible que bloqueado sea true ya que tiene que ser true para que esta linea se ejecute
             bloqueado = true;
             {
                 Vector2 originalInputAxis = moveProvider.leftHandMoveAction.action.ReadValue<Vector2>();
@@ -37,7 +38,7 @@ public class CabinaMovimientoBloqueo : MonoBehaviour
             el original input era siempre (0,0)
             */
         }
-        else if (!RetroExcabadora.EnCabina && bloqueado)
+        else if (!RetroExcabadora.EnCabina) //&& bloqueado)
         {
             moveProvider.enabled = true;  // 🔓 Activa nuevamente al salir
             bloqueado = false;
