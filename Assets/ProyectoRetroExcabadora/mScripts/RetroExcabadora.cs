@@ -34,7 +34,7 @@ public class RetroExcabadora : MonoBehaviour
         private float acceleration = 1f;
         public float turnSpeed = 0f;
         public int wheelAngle = 0;
-        private const float maxTurnSpeed = 30f;
+        private const float maxTurnSpeed = 100f;
         private const float tiron = 0f;
         private const float maxAcceleration = 0f;
         private const float maxSpeed = 100f;
@@ -183,11 +183,13 @@ public class RetroExcabadora : MonoBehaviour
     public void updateWheelInput(float angle)
     {
         Debug.Log("angle in updateWheelInput:" + angle);
-        if(angle > -0.15f && angle < 0.15f) {
+        if(angle > -0.35f && angle < 0.35f) {
+            Debug.Log("the turn speed is 0");
             this.turnSpeed = 0;
         }else {
             this.turnSpeed = angle * maxTurnSpeed;
         }
+        Debug.Log("turnSpeed: " + this.turnSpeed);
     }
 
     void moveForward(float Speed)
@@ -200,6 +202,8 @@ public class RetroExcabadora : MonoBehaviour
         {
             //Debug.Log(this.myStateContext);
             this.transform.Rotate(0, turnSpeed * Time.deltaTime, 0);
+        }else if(this.myStateContext.getSpeed() < 0) {
+            this.transform.Rotate(0, -turnSpeed * Time.deltaTime, 0);
         }
     }
 }
