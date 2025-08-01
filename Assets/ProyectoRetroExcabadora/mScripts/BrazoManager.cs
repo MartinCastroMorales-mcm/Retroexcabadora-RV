@@ -15,7 +15,6 @@ public class BrazoControl : MonoBehaviour
 
     public void EmpezarAgarrar()
     {
-
         agarrandoPalanca = true;
         joystickIzquierdoLecturaZ.action.Enable();
         joystickIzquierdoLecturaY.action.Enable();
@@ -24,7 +23,6 @@ public class BrazoControl : MonoBehaviour
 
     public void Soltar()
     {
-
         agarrandoPalanca = false;
         joystickIzquierdoLecturaZ.action.Disable();
         joystickIzquierdoLecturaY.action.Disable();
