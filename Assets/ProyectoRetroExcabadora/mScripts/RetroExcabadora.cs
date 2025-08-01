@@ -185,7 +185,7 @@ public class RetroExcabadora : MonoBehaviour
 
     public void updatePedalInput(Vector2 input)
     {
-        Debug.Log("this is public updateInput" + input);
+        //Debug.Log("this is public updateInput" + input);
         if (input.y == 1)
         {
             //moveForward(this.myStateContext.getSpeed());
