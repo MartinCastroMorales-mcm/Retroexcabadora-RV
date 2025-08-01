@@ -2770,6 +2770,45 @@
                     "isPartOfComposite": true
                 }
             ]
+        },
+        {
+            "name": "Joystick Izquierdo",
+            "id": "aa4ca20d-d057-4467-803b-b2854bf6c959",
+            "actions": [
+                {
+                    "name": "Lectura Joystick Izquierdo",
+                    "type": "Value",
+                    "id": "a0dc783b-f384-40b1-b598-6541fe3c6eec",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "2f763374-a87d-40eb-875b-022359ff40ee",
+                    "path": "</XRController>{LeftHand}/thumbstick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Lectura Joystick Izquierdo",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ca5afde5-46fa-4bfc-b151-848f98cc1b83",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Lectura Joystick Izquierdo",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [
