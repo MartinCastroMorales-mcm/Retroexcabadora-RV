@@ -47,6 +47,6 @@ public class CabinaMovimientoBloqueo : MonoBehaviour
     {
         //Entrega el estado
         retroExcabadoraScript.updatePedalInput(input);
-        Debug.Log(input);
+        //Debug.Log(input);
     }
 }
