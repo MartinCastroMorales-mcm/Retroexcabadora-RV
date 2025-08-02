@@ -35,22 +35,29 @@ public class PalaController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log($"[PALA CONTROLLER] OnTriggerEnter con: {other.name}");
+        
         if(waitTime > 0) {
-            Debug.Log("wait for the next collision");
+            Debug.Log("[PALA CONTROLLER] wait for the next collision");
             return;
         }
-        Debug.Log("collision pala");
+        Debug.Log("[PALA CONTROLLER] collision pala");
         if (other.gameObject.CompareTag("Debris"))
         {
-            Debug.Log("Debris collission");
+            Debug.Log("[PALA CONTROLLER] Debris collission - TOMANDO CONTROL");
             Rigidbody debrisRigidbody = other.gameObject.GetComponent<Rigidbody>();
             if (debrisRigidbody != null)
             {
+                // DEBUG: Logs para diagnosticar posiciones
+                Debug.Log($"[PALA CONTROLLER DEBUG] Debris original pos: {other.transform.position}");
+                Debug.Log($"[PALA CONTROLLER DEBUG] debrisPosInPala pos: {debrisPosInPala.transform.position}");
+                Debug.Log($"[PALA CONTROLLER DEBUG] Nueva posición calculada: {debrisPosInPala.transform.position + new Vector3(0, 1, 0)}");
+                
                 // Ejecutar funcion de guardar debris sobre la pala
                 debrisRigidbody.isKinematic = true;
                 debrisRigidbody.useGravity = false;
                 this.hasDebris = true;
-                Debug.Log("has touched Debris with pala: " + this.hasDebris);
+                Debug.Log("[PALA CONTROLLER] has touched Debris with pala: " + this.hasDebris);
                 this.Debris = other.gameObject;
                 other.transform.position = debrisPosInPala.transform.position + new Vector3(0, 1, 0);
                 other.transform.SetParent(this.transform);
